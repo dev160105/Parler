@@ -27,7 +27,7 @@ export default function UnitView({ unit, navigate, state }) {
           const lesson = LESSONS[id];
           const done = state.completedLessons[id];
           return (
-            <motion.div key={id} className={`lesson-card ${done ? 'done' : ''}`} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} whileHover={{ scale: 1.02, borderColor: '#3a3a3a' }}>
+            <motion.div key={id} className={`lesson-card ${done ? 'done' : ''}`} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.06 }} whileHover={{ scale: 1.02, borderColor: '#3a3a3a' }}>
               <div className="lcard-top">
                 <div className="lcard-num">L{i + 1}</div>
                 {done && <CheckCircle2 size={16} className="done-icon" />}

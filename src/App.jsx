@@ -51,7 +51,7 @@ export default function App() {
       case 'stories': return <StoriesView storyId={currentStory} navigate={navigate} addXP={handleAddXP} />;
       case 'pronunciation': return <PronunciationView />;
       case 'flashcards': return <FlashcardsView state={appState.state} learnCard={appState.learnCard} addXP={handleAddXP} />;
-      case 'quiz': return <QuizView answerQuiz={appState.answerQuiz} addXP={handleAddXP} />;
+      case 'quiz': return <QuizView answerQuiz={appState.answerQuiz} addXP={handleAddXP} navigate={navigate} />;
       case 'progress': return <ProgressView state={appState.state} level={appState.level} levelXP={appState.levelXP} levelPct={appState.levelPct} />;
       default: return <Dashboard navigate={navigate} state={appState.state} level={appState.level} />;
     }

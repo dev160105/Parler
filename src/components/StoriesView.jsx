@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Volume2, BookMarked } from 'lucide-react';
+import { ArrowLeft, Volume2, BookMarked, ChevronRight } from 'lucide-react';
 import { STORIES } from '../data/course';
 
 function speak(text) {
@@ -77,13 +77,14 @@ export default function StoriesView({ storyId, navigate, addXP }) {
       </div>
       <div className="stories-grid">
         {Object.entries(STORIES).map(([id, s], i) => (
-          <motion.div key={id} className="story-list-card" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} whileHover={{ scale: 1.02, borderColor: '#3a3a3a' }} onClick={() => setActiveId(id)}>
+          <motion.div key={id} className="story-list-card" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.06 }} onClick={() => setActiveId(id)}>
             <div className="story-icon"><BookMarked size={18} /></div>
             <div>
               <span className="unit-badge">{s.level}</span>
               <h4>{s.title}</h4>
               <p>{s.summary}</p>
             </div>
+            <ChevronRight size={16} className="story-chevron" />
           </motion.div>
         ))}
       </div>

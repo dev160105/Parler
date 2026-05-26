@@ -1,5 +1,13 @@
 import { motion } from 'framer-motion';
-import { Flame, Star, BookOpen, Brain } from 'lucide-react';
+import { Flame, Star, BookOpen, Brain, GraduationCap, Headphones, FileText, Mic } from 'lucide-react';
+
+const SKILL_ICONS = {
+  vocab: BookOpen,
+  grammar: GraduationCap,
+  listening: Headphones,
+  reading: FileText,
+  pronunciation: Mic,
+};
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -32,7 +40,7 @@ export default function ProgressView({ state, level, levelXP, levelPct }) {
       {/* Stats grid */}
       <div className="progress-stats">
         {stats.map(({ icon: Icon, label, value }, i) => (
-          <motion.div key={label} className="progress-stat" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
+          <motion.div key={label} className="progress-stat" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.06 }}>
             <Icon size={20} />
             <div className="ps-value">{value}</div>
             <div className="ps-label">{label}</div>
@@ -43,17 +51,23 @@ export default function ProgressView({ state, level, levelXP, levelPct }) {
       {/* Skill bars */}
       <div className="section-head"><h2>Skills</h2></div>
       <div className="skill-bars">
-        {Object.entries(state.skills).map(([key, val], i) => (
-          <motion.div key={key} className="skill-bar" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>
-            <div className="skill-bar-header">
-              <span className="skill-name">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
-              <span className="skill-pct">{val}%</span>
-            </div>
-            <div className="skill-track">
-              <motion.div className="skill-fill" initial={{ width: '0%' }} whileInView={{ width: `${val}%` }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.2 + i * 0.08, ease: 'easeOut' }} />
-            </div>
-          </motion.div>
-        ))}
+        {Object.entries(state.skills).map(([key, val], i) => {
+          const SkillIcon = SKILL_ICONS[key];
+          return (
+            <motion.div key={key} className="skill-bar" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.06 }}>
+              <div className="skill-bar-header">
+                <span className="skill-name">
+                  {SkillIcon && <SkillIcon size={14} />}
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </span>
+                <span className="skill-pct">{val}%</span>
+              </div>
+              <div className="skill-track">
+                <motion.div className="skill-fill" initial={{ width: '0%' }} whileInView={{ width: `${val}%` }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.2 + i * 0.08, ease: 'easeOut' }} />
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Week row */}
@@ -61,7 +75,7 @@ export default function ProgressView({ state, level, levelXP, levelPct }) {
       <div className="week-row">
         {DAYS.map((d, i) => (
           <motion.div key={d} className={`week-cell ${i === today ? 'today' : i < today ? 'past' : ''}`} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}>
-            {i < today ? <div className="week-dot active" /> : i === today ? <Flame size={16} /> : <div className="week-dot" />}
+            <div className={`week-dot ${i <= today ? 'active' : ''}`} />
             <span>{d}</span>
           </motion.div>
         ))}

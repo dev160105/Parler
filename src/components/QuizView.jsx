@@ -13,7 +13,7 @@ function buildQuiz() {
   }).slice(0, 8);
 }
 
-export default function QuizView({ answerQuiz, addXP }) {
+export default function QuizView({ answerQuiz, addXP, navigate }) {
   const [items, setItems] = useState([]);
   const [idx, setIdx] = useState(0);
   const [score, setScore] = useState(0);
@@ -55,6 +55,11 @@ export default function QuizView({ answerQuiz, addXP }) {
           <motion.button className="btn-primary" onClick={init} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
             <RefreshCw size={15} /> Try again
           </motion.button>
+          <p style={{ color: '#666', fontSize: '0.9rem', marginTop: '12px', marginBottom: '24px' }}>Keep the momentum going</p>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button className="btn-ghost" onClick={() => navigate('flashcards')}>Go to Flashcards</button>
+            <button className="btn-ghost" onClick={() => navigate('home')}>Back to Dashboard</button>
+          </div>
         </motion.div>
       </div>
     );

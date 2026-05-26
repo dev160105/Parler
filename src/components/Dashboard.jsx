@@ -56,15 +56,15 @@ export default function Dashboard({ navigate, state, level }) {
   return (
     <div className="view-pad">
       <section className="hero-card" ref={overviewRef} data-section="overview">
-        <motion.div className="hero-orb orb-1" animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }} />
-        <motion.div className="hero-orb orb-2" animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 7, ease: 'easeInOut' }} />
-        <motion.div className="hero-orb orb-3" animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 9, ease: 'easeInOut' }} />
+        <motion.div className="hero-orb orb-1" style={{ zIndex: 0 }} animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }} />
+        <motion.div className="hero-orb orb-2" style={{ zIndex: 0 }} animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }} />
+        <motion.div className="hero-orb orb-3" style={{ zIndex: 0 }} animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 10, ease: 'easeInOut' }} />
 
         <div className="hero-tag">· Your A1–A2 pathway</div>
         <h1 className="hero-title">
           {heroWords.map((word, idx) => (
-            <motion.span key={word + idx} className="hero-word" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-              {word}{idx < heroWords.length - 1 ? ' ' : ''}
+            <motion.span key={word + idx} style={{ display: 'inline-block', marginRight: '0.25em' }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+              {word}
             </motion.span>
           ))}
         </h1>
@@ -76,7 +76,7 @@ export default function Dashboard({ navigate, state, level }) {
           </button>
           <a className="btn-ghost" href="#course-map">View course map</a>
         </div>
-        <div className="hero-stats">
+        <motion.div className="hero-stats" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
           <div className="h-stat">
             <span>{Object.keys(state.completedLessons).length}</span>
             <label>Lessons done</label>
@@ -93,7 +93,7 @@ export default function Dashboard({ navigate, state, level }) {
             <span>{LEVEL_LABELS[Math.min(level, LEVEL_LABELS.length - 1)]}</span>
             <label>Title</label>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <div className="section-head" id="course-map" ref={unitsRef} data-section="units">
@@ -102,13 +102,13 @@ export default function Dashboard({ navigate, state, level }) {
       </div>
 
       <motion.div className="unit-grid" variants={container} initial="initial" animate="animate">
-        {COURSE.units.map((unit) => {
+        {COURSE.units.map((unit, unitIdx) => {
           const total = unit.lessons.length;
           const completed = unit.lessons.filter(id => state.completedLessons[id]).length;
           const pct = total ? Math.round((completed / total) * 100) : 0;
           const Icon = UNIT_ICONS[unit.id];
           return (
-            <motion.div key={unit.id} variants={item} className="unit-card" onClick={() => navigate('unit', { unit })} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} whileHover={{ scale: 1.02, borderColor: '#3a3a3a' }}>
+            <motion.div key={unit.id} variants={item} className="unit-card" onClick={() => navigate('unit', { unit })} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: unitIdx * 0.06 }} whileHover={{ scale: 1.02, borderColor: '#3a3a3a' }}>
               <div className="unit-top">
                 <div className="unit-icon">{Icon ? <Icon size={20} /> : null}</div>
                 <div className="unit-badge">· {unit.level} · Unit {unit.id}</div>
