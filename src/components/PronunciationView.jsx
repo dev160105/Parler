@@ -2,15 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, X } from 'lucide-react';
 import { SOUNDS } from '../data/course';
+import { speak } from '../utils/speech';
 
-function speak(text) {
-  if (!('speechSynthesis' in window)) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'fr-FR'; u.rate = 0.8;
-  speechSynthesis.cancel(); speechSynthesis.speak(u);
-}
-
-export default function PronunciationView() {
+export default function PronunciationView({ speechRate }) {
   const [active, setActive] = useState(null);
 
   return (
@@ -43,7 +37,7 @@ export default function PronunciationView() {
             <p className="sound-tip">{SOUNDS[active].tip}</p>
             <div className="sound-examples-row">
               {SOUNDS[active].example.split(', ').map((ex, i) => (
-                <motion.button key={i} className="sound-play-btn" onClick={() => speak(ex)} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <motion.button key={i} className="sound-play-btn" onClick={() => speak(ex, speechRate)} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Volume2 size={14} />
                   <span>{ex}</span>
                 </motion.button>

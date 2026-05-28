@@ -9,6 +9,7 @@ const DEFAULT_STATE = {
   completedLessons: {},
   cardsLearned: 0,
   skills: { vocab: 10, grammar: 8, listening: 6, reading: 7, pronunciation: 5 },
+  speechRate: 1,
 };
 
 function loadState() {
@@ -66,9 +67,18 @@ export function useAppState() {
     });
   }, []);
 
+  const setSpeechRate = useCallback((rate) => {
+    const nextRate = Math.min(1.2, Math.max(0.6, rate));
+    setState(prev => {
+      const next = { ...prev, speechRate: nextRate };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
   const level = Math.floor(state.xp / 200) + 1;
   const levelXP = state.xp % 200;
   const levelPct = (levelXP / 200) * 100;
 
-  return { state, addXP, completeLesson, learnCard, answerQuiz, level, levelXP, levelPct };
+  return { state, addXP, completeLesson, learnCard, answerQuiz, setSpeechRate, level, levelXP, levelPct };
 }

@@ -10,7 +10,9 @@ const NAV = [
   { id: 'progress', label: 'Progress', icon: TrendingUp },
 ];
 
-export default function Sidebar({ view, navigate, state, level, levelXP, levelPct }) {
+export default function Sidebar({ view, navigate, state, level, levelXP, levelPct, speechRate, setSpeechRate }) {
+  const isSlow = speechRate < 1;
+
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
@@ -41,6 +43,14 @@ export default function Sidebar({ view, navigate, state, level, levelXP, levelPc
           </motion.button>
         ))}
       </nav>
+
+      <div className="speech-toggle">
+        <div className="speech-label">Speech speed</div>
+        <div className="speech-segment">
+          <button className={`speech-seg ${!isSlow ? 'active' : ''}`} onClick={() => setSpeechRate(1)} aria-pressed={!isSlow}>Normal</button>
+          <button className={`speech-seg ${isSlow ? 'active' : ''}`} onClick={() => setSpeechRate(0.8)} aria-pressed={isSlow}>Slow</button>
+        </div>
+      </div>
 
       <div className="streak-card">
         <motion.div className="streak-flame" animate={{ rotate: [-5, 5, -5] }} transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}>

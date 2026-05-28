@@ -2,14 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, RotateCcw, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { COURSE, LESSONS } from '../data/course';
+import { speak } from '../utils/speech';
 
-function speak(text) {
-  if (!('speechSynthesis' in window)) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'fr-FR'; speechSynthesis.cancel(); speechSynthesis.speak(u);
-}
-
-export default function FlashcardsView({ state, learnCard, addXP }) {
+export default function FlashcardsView({ state, learnCard, addXP, speechRate }) {
   const [unitId, setUnitId] = useState(1);
   const [deck, setDeck] = useState([]);
   const [idx, setIdx] = useState(0);
@@ -61,7 +56,7 @@ export default function FlashcardsView({ state, learnCard, addXP }) {
                     <div className="card-side-label">Français</div>
                     <div className="card-main-text">{card.fr}</div>
                     <div className="card-phon">/{card.phon}/</div>
-                    <button className="play-btn card-play" onClick={e => { e.stopPropagation(); speak(card.fr); }}><Volume2 size={14} /></button>
+                    <button className="play-btn card-play" onClick={e => { e.stopPropagation(); speak(card.fr, speechRate); }}><Volume2 size={14} /></button>
                     <div className="card-hint">Tap to reveal</div>
                   </>
                 ) : (

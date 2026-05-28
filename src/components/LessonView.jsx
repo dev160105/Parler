@@ -2,16 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Volume2, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { LESSONS } from '../data/course';
+import { speak } from '../utils/speech';
 
-function speak(text) {
-  if (!('speechSynthesis' in window)) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'fr-FR';
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
-}
-
-export default function LessonView({ lessonId, navigate, state, completeLesson, addXP, showToast }) {
+export default function LessonView({ lessonId, navigate, state, completeLesson, addXP, showToast, speechRate }) {
   const lesson = LESSONS[lessonId];
   const [showAnswers, setShowAnswers] = useState(false);
   const done = state.completedLessons[lessonId];
@@ -66,7 +59,7 @@ export default function LessonView({ lessonId, navigate, state, completeLesson, 
               <span className="vocab-en">{v.en}</span>
               <span className="vocab-phon">/{v.phon}/</span>
               <span className="vocab-ex">{v.example}</span>
-              <button className="play-btn" onClick={() => speak(v.fr)} title="Play"><Volume2 size={14} /></button>
+              <button className="play-btn" onClick={() => speak(v.fr, speechRate)} title="Play"><Volume2 size={14} /></button>
             </motion.div>
           ))}
         </div>
@@ -85,7 +78,7 @@ export default function LessonView({ lessonId, navigate, state, completeLesson, 
               <div key={i} className="example-row">
                 <div className="ex-fr">{ex.fr}</div>
                 <div className="ex-en">{ex.en}</div>
-                <button className="play-btn small" onClick={() => speak(ex.fr)}><Volume2 size={12} /></button>
+                <button className="play-btn small" onClick={() => speak(ex.fr, speechRate)}><Volume2 size={12} /></button>
               </div>
             ))}
           </div>
@@ -103,7 +96,7 @@ export default function LessonView({ lessonId, navigate, state, completeLesson, 
                   <div className="dialog-fr">{line.fr}</div>
                   <div className="dialog-en">{line.en}</div>
                 </div>
-                <button className="play-btn small" onClick={() => speak(line.fr)}><Volume2 size={12} /></button>
+                <button className="play-btn small" onClick={() => speak(line.fr, speechRate)}><Volume2 size={12} /></button>
               </motion.div>
             ))}
           </div>

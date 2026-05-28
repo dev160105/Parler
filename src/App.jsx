@@ -47,10 +47,10 @@ export default function App() {
     switch (view) {
       case 'home': return <Dashboard navigate={navigate} state={appState.state} level={appState.level} />;
       case 'unit': return <UnitView unit={currentUnit} navigate={navigate} state={appState.state} />;
-      case 'lesson': return <LessonView lessonId={currentLesson} navigate={navigate} state={appState.state} completeLesson={appState.completeLesson} addXP={handleAddXP} showToast={showToast} />;
-      case 'stories': return <StoriesView storyId={currentStory} navigate={navigate} addXP={handleAddXP} />;
-      case 'pronunciation': return <PronunciationView />;
-      case 'flashcards': return <FlashcardsView state={appState.state} learnCard={appState.learnCard} addXP={handleAddXP} />;
+      case 'lesson': return <LessonView lessonId={currentLesson} navigate={navigate} state={appState.state} completeLesson={appState.completeLesson} addXP={handleAddXP} showToast={showToast} speechRate={appState.state.speechRate} />;
+      case 'stories': return <StoriesView storyId={currentStory} navigate={navigate} addXP={handleAddXP} speechRate={appState.state.speechRate} />;
+      case 'pronunciation': return <PronunciationView speechRate={appState.state.speechRate} />;
+      case 'flashcards': return <FlashcardsView state={appState.state} learnCard={appState.learnCard} addXP={handleAddXP} speechRate={appState.state.speechRate} />;
       case 'quiz': return <QuizView answerQuiz={appState.answerQuiz} addXP={handleAddXP} navigate={navigate} />;
       case 'progress': return <ProgressView state={appState.state} level={appState.level} levelXP={appState.levelXP} levelPct={appState.levelPct} />;
       default: return <Dashboard navigate={navigate} state={appState.state} level={appState.level} />;
@@ -59,7 +59,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar view={view} navigate={navigate} state={appState.state} level={appState.level} levelXP={appState.levelXP} levelPct={appState.levelPct} />
+      <Sidebar view={view} navigate={navigate} state={appState.state} level={appState.level} levelXP={appState.levelXP} levelPct={appState.levelPct} speechRate={appState.state.speechRate} setSpeechRate={appState.setSpeechRate} />
       <main className="main-content">
         <AnimatePresence mode="wait">
           <motion.div key={view + (currentLesson || '') + (currentUnit?.id || '')} variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ minHeight: '100%' }}>

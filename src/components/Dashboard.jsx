@@ -135,7 +135,7 @@ export default function Dashboard({ navigate, state, level }) {
         {Object.entries(STORIES).slice(0, 3).map(([id, story]) => (
           <motion.div key={id} className="story-list-card" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} onClick={() => navigate('stories', { story: id })}>
             <div className="story-icon">{<BookMarked size={18} />}</div>
-            <div>
+            <div className="story-meta">
               <span className="unit-badge">{story.level}</span>
               <h4>{story.title}</h4>
               <p>{story.summary}</p>

@@ -2,14 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Volume2, BookMarked, ChevronRight } from 'lucide-react';
 import { STORIES } from '../data/course';
+import { speak } from '../utils/speech';
 
-function speak(text) {
-  if (!('speechSynthesis' in window)) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'fr-FR'; speechSynthesis.cancel(); speechSynthesis.speak(u);
-}
-
-export default function StoriesView({ storyId, navigate, addXP }) {
+export default function StoriesView({ storyId, navigate, addXP, speechRate }) {
   const [activeId, setActiveId] = useState(storyId || null);
   const [revealed, setRevealed] = useState({});
 
@@ -31,7 +26,7 @@ export default function StoriesView({ storyId, navigate, addXP }) {
           {story.paragraphs.map((p, i) => (
             <motion.div key={i} className="story-para" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15 }}>
               <p>{p}</p>
-              <button className="play-btn" onClick={() => speak(p)}><Volume2 size={14} /></button>
+              <button className="play-btn" onClick={() => speak(p, speechRate)}><Volume2 size={14} /></button>
             </motion.div>
           ))}
         </div>
@@ -61,7 +56,7 @@ export default function StoriesView({ storyId, navigate, addXP }) {
           <motion.button className="btn-primary" onClick={() => addXP(12, 'Story read')} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
             Mark story read · +12 XP
           </motion.button>
-          <button className="btn-ghost" onClick={() => speak(story.paragraphs.join(' '))}>
+          <button className="btn-ghost" onClick={() => speak(story.paragraphs.join(' '), speechRate)}>
             <Volume2 size={14} /> Play full story
           </button>
         </div>
@@ -79,7 +74,7 @@ export default function StoriesView({ storyId, navigate, addXP }) {
         {Object.entries(STORIES).map(([id, s], i) => (
           <motion.div key={id} className="story-list-card" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-50px' }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.06 }} onClick={() => setActiveId(id)}>
             <div className="story-icon"><BookMarked size={18} /></div>
-            <div>
+            <div className="story-meta">
               <span className="unit-badge">{s.level}</span>
               <h4>{s.title}</h4>
               <p>{s.summary}</p>
