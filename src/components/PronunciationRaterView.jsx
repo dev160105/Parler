@@ -166,65 +166,49 @@ export default function PronunciationRater({}) {
 
   return (
     <div className="view-pad">
-      {/* Header */}
-      <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mb-10">
-        <h1 className="text-5xl font-bold font-display mb-2">Pronunciation Rater</h1>
-        <p className="text-lg text-text-muted">Record yourself speaking French and get instant AI-powered feedback.</p>
+      <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="section-head-hero">
+        <h1 className="view-title">Pronunciation Rater</h1>
+        <p className="view-sub">Record yourself speaking French and get instant AI-powered feedback.</p>
       </motion.section>
 
-      {/* Token & Usage Bar */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="mb-8 p-4 bg-surface rounded-lg border border-border flex items-center justify-between gap-4">
-        <div>
-          <span className="text-sm text-text-muted">Uses left today: </span>
-          <span className="font-semibold text-accent ml-1">
-            {remaining} / {DAILY_LIMIT}
-          </span>
-          <span className="text-sm text-text-muted ml-4">Token: </span>
-          <span className={tokenConfigured ? 'font-semibold text-teal-light' : 'font-semibold text-red-500'}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="rater-toolbar">
+        <div className="rater-meta">
+          <span className="rater-meta-label">Uses left today</span>
+          <span className="rater-meta-value">{remaining} / {DAILY_LIMIT}</span>
+          <span className="rater-meta-label rater-meta-token">Token</span>
+          <span className={`rater-meta-value ${tokenConfigured ? 'is-ok' : 'is-missing'}`}>
             {tokenConfigured ? 'configured' : 'not set'}
           </span>
         </div>
-        <div className="flex gap-2">
-          <button onClick={handleSetToken} className="px-4 py-2 text-sm bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors">
-            Set token
-          </button>
-          <button onClick={handleClearToken} className="px-4 py-2 text-sm bg-surface-2 text-text border border-border rounded-lg hover:bg-border-hover transition-colors">
-            Clear
-          </button>
+        <div className="rater-actions">
+          <button onClick={handleSetToken} className="btn-primary small">Set token</button>
+          <button onClick={handleClearToken} className="btn-ghost small">Clear</button>
         </div>
       </motion.div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Input & Recording */}
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="lg:col-span-2 space-y-6">
-          {/* French Text Card */}
-          <div className="bg-surface rounded-2xl border border-border p-6">
-            <div className="flex items-center justify-between mb-4">
-              <label className="text-sm font-semibold uppercase tracking-wide text-text-muted">French text to practise</label>
+      <div className="rater-grid">
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="rater-col">
+          <div className="rater-card">
+            <div className="rater-card-header">
+              <span className="rater-card-label">French text to practise</span>
             </div>
             <textarea
               value={frenchText}
               onChange={(e) => setFrenchText(e.target.value)}
-              className="w-full min-h-24 bg-surface-2 border border-border rounded-lg p-4 text-text placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+              className="rater-textarea"
               placeholder="Enter French text..."
             />
           </div>
 
-          {/* Recording Card */}
-          <div className="bg-surface rounded-2xl border border-border p-6">
-            <div className="flex items-center justify-between mb-4">
-              <label className="text-sm font-semibold uppercase tracking-wide text-text-muted">Your recording</label>
+          <div className="rater-card">
+            <div className="rater-card-header">
+              <span className="rater-card-label">Your recording</span>
             </div>
-            <div className="flex gap-3 flex-wrap">
+            <div className="rater-record-row">
               <button
                 onClick={isRecording ? stopRecord : startRecord}
                 disabled={isLoading || remaining <= 0}
-                className={`flex items-center gap-2 px-5 py-3 rounded-lg font-medium transition-all ${
-                  isRecording
-                    ? 'bg-red-500 text-white animate-pulse'
-                    : 'bg-accent text-white hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed'
-                }`}
+                className={`rater-record-btn ${isRecording ? 'is-recording' : ''}`}
               >
                 {isRecording ? (
                   <>
@@ -240,60 +224,53 @@ export default function PronunciationRater({}) {
               </button>
             </div>
             {audioBlob && (
-              <div className="mt-4 p-4 bg-surface-2 rounded-lg border border-border">
-                <audio controls src={URL.createObjectURL(audioBlob)} className="w-full" />
+              <div className="rater-audio">
+                <audio controls src={URL.createObjectURL(audioBlob)} className="rater-audio-player" />
               </div>
             )}
           </div>
 
-          {/* Analyse Button */}
           <button
             onClick={analyseIt}
             disabled={isLoading || !audioBlob || remaining <= 0 || !tokenConfigured}
-            className="w-full px-6 py-4 bg-teal-light text-white font-semibold rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+            className="btn-primary rater-analyse"
           >
             {isLoading ? 'Analysing...' : 'Analyse Pronunciation'}
           </button>
         </motion.div>
 
-        {/* Right Column: Feedback & Results */}
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="space-y-6">
-          {/* Status / Placeholder */}
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="rater-side">
           {!feedback && (
-            <div className="bg-surface rounded-2xl border border-border p-8 text-center">
-              <Volume2 size={40} className="mx-auto mb-4 text-text-muted opacity-50" />
-              <p className="text-text-muted text-sm leading-relaxed">{status}</p>
+            <div className="rater-card rater-placeholder">
+              <Volume2 size={40} className="rater-placeholder-icon" />
+              <p className="rater-status">{status}</p>
             </div>
           )}
 
-          {/* Results */}
           {feedback && (
             <>
-              {/* Scores Grid */}
-              <div className="grid grid-cols-3 gap-3">
+              <div className="rater-score-grid">
                 {[
                   { label: 'Pronunciation', key: 'pronunciation' },
                   { label: 'Fluency', key: 'fluency' },
                   { label: 'Rhythm', key: 'rhythm' },
                 ].map((item) => (
-                  <div key={item.key} className="bg-surface rounded-lg border border-border p-4 text-center">
-                    <div className="text-3xl font-bold text-accent mb-1">{scores[item.key]}</div>
-                    <div className="text-xs uppercase tracking-wide text-text-muted">{item.label}</div>
+                  <div key={item.key} className="rater-score-card">
+                    <div className="rater-score-value">{scores[item.key]}</div>
+                    <div className="rater-score-label">{item.label}</div>
                   </div>
                 ))}
               </div>
 
-              {/* Feedback Text */}
-              <div className="bg-surface rounded-2xl border border-border p-6">
-                <div className="text-sm font-semibold uppercase tracking-wide text-text-muted mb-3">Feedback</div>
-                <p className="text-text leading-relaxed">{feedback}</p>
+              <div className="rater-card">
+                <div className="rater-card-label">Feedback</div>
+                <p className="rater-feedback">{feedback}</p>
               </div>
 
-              {/* Transcript */}
               {transcript && (
-                <div className="bg-surface rounded-2xl border border-border p-6">
-                  <div className="text-sm font-semibold uppercase tracking-wide text-text-muted mb-3">Transcript</div>
-                  <p className="text-text-muted text-sm">{transcript}</p>
+                <div className="rater-card">
+                  <div className="rater-card-label">Transcript</div>
+                  <p className="rater-transcript">{transcript}</p>
                 </div>
               )}
             </>
