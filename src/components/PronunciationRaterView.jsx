@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mic, Square, Volume2 } from 'lucide-react';
-
-const DAILY_LIMIT = 10;
-const USAGE_KEY = 'pronunciation_rater_usage';
+import { PRONUNCIATION_DAILY_LIMIT as DAILY_LIMIT, PRONUNCIATION_USAGE_KEY as USAGE_KEY } from '../lib/constants';
 
 function getToday() {
   return new Date().toISOString().slice(0, 10);
@@ -60,7 +58,7 @@ function clearTokenRuntime() {
   } catch (e) {}
 }
 
-export default function PronunciationRater({}) {
+export default function PronunciationRater() {
   const [usage, setUsageState] = useState(getUsage());
   const [status, setStatus] = useState('Ready to record.');
   const [remaining, setRemaining] = useState(DAILY_LIMIT - usage.count);
@@ -68,7 +66,6 @@ export default function PronunciationRater({}) {
   const [feedback, setFeedback] = useState(null);
   const [frenchText, setFrenchText] = useState('Bonjour, comment vous appelez-vous ? Je m\'appelle Marie et j\'habite à Paris depuis cinq ans.');
   const [audioBlob, setAudioBlob] = useState(null);
-  const [transcript, setTranscript] = useState('');
   const [scores, setScores] = useState({ pronunciation: null, fluency: null, rhythm: null });
   const [tokenConfigured, setTokenConfigured] = useState(!!getToken());
   const mediaRecorderRef = useRef(null);
@@ -143,6 +140,7 @@ export default function PronunciationRater({}) {
       setFeedback('Great pronunciation! Try to improve your rhythm for a more natural flow.');
       setIsLoading(false);
       setStatus('Done! Record again to try once more.');
+
     }, 2000);
   }
 
@@ -266,13 +264,6 @@ export default function PronunciationRater({}) {
                 <div className="rater-card-label">Feedback</div>
                 <p className="rater-feedback">{feedback}</p>
               </div>
-
-              {transcript && (
-                <div className="rater-card">
-                  <div className="rater-card-label">Transcript</div>
-                  <p className="rater-transcript">{transcript}</p>
-                </div>
-              )}
             </>
           )}
         </motion.div>

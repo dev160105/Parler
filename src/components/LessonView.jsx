@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Volume2, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { LESSONS } from '../data/course';
 import { speak } from '../utils/speech';
+import { XP_LESSON } from '../lib/constants';
 
 export default function LessonView({ lessonId, navigate, state, completeLesson, addXP, showToast, speechRate }) {
   const lesson = LESSONS[lessonId];
@@ -22,7 +23,7 @@ export default function LessonView({ lessonId, navigate, state, completeLesson, 
   const handleComplete = () => {
     if (done) { showToast('Already completed!', 'info'); return; }
     completeLesson(lessonId);
-    showToast('+20 XP · Lesson complete!', 'xp');
+    showToast(`+${XP_LESSON} XP · Lesson complete!`, 'xp');
   };
 
   return (

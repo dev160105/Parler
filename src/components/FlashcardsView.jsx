@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, RotateCcw, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Volume2, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { COURSE, LESSONS } from '../data/course';
 import { speak } from '../utils/speech';
+import { XP_CARD } from '../lib/constants';
 
 export default function FlashcardsView({ state, learnCard, addXP, speechRate }) {
   const [unitId, setUnitId] = useState(1);
   const [deck, setDeck] = useState([]);
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [dir, setDir] = useState(1);
 
   useEffect(() => {
     const unit = COURSE.units.find(u => u.id === unitId);
@@ -23,8 +23,7 @@ export default function FlashcardsView({ state, learnCard, addXP, speechRate }) 
   const card = deck[idx];
 
   const next = (ok) => {
-    if (ok) { learnCard(); addXP(5, 'Card learned'); }
-    setDir(ok ? 1 : -1);
+    if (ok) { learnCard(); addXP(XP_CARD, 'Card learned'); }
     setFlipped(false);
     setTimeout(() => setIdx(i => (i + 1) % deck.length), 50);
   };

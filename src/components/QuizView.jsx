@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, RefreshCw, Trophy } from 'lucide-react';
 import { LESSONS } from '../data/course';
+import { XP_QUIZ } from '../lib/constants';
 
 function buildQuiz() {
   const vocab = Object.values(LESSONS).flatMap(l => l.vocab || []);
@@ -33,7 +34,7 @@ export default function QuizView({ answerQuiz, addXP, navigate }) {
     if (chosen !== null) return;
     setChosen(opt);
     const correct = opt === item.answer;
-    if (correct) { setScore(s => s + 1); answerQuiz(true); addXP(8, 'Correct!'); }
+    if (correct) { setScore(s => s + 1); answerQuiz(true); addXP(XP_QUIZ, 'Correct!'); }
     setTimeout(() => {
       if (idx + 1 >= items.length) { setDone(true); }
       else { setIdx(i => i + 1); setChosen(null); }

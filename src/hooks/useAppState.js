@@ -1,7 +1,15 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-
-const STORAGE_KEY = 'parler_v2_state';
+import {
+  STORAGE_KEY,
+  XP_LESSON,
+  XP_CARD,
+  XP_QUIZ,
+  LEVEL_XP_THRESHOLD,
+  SPEECH_RATE_NORMAL,
+  SPEECH_RATE_MIN,
+  SPEECH_RATE_MAX,
+} from '../lib/constants';
 
 const DEFAULT_STATE = {
   xp: 0,
@@ -10,7 +18,7 @@ const DEFAULT_STATE = {
   completedLessons: {},
   cardsLearned: 0,
   skills: { vocab: 10, grammar: 8, listening: 6, reading: 7, pronunciation: 5 },
-  speechRate: 1,
+  speechRate: SPEECH_RATE_NORMAL,
 };
 
 function loadLocal() {
@@ -56,7 +64,8 @@ export function useAppState(userId) {
   // Load from Supabase when user logs in
   useEffect(() => {
     if (!userId) return;
-    supabase.from('progress').select('*').eq('id', userId).single().then(({ data }) => {
+    supabase.from('progress').select('*').eq('id', userId).single().then(({ data, error }) => {
+      if (error && error.code !== 'PGRST116') console.error('Progress load error:', error);
       if (data) {
         const loaded = { ...DEFAULT_STATE, ...fromRow(data) };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(loaded));
@@ -69,7 +78,9 @@ export function useAppState(userId) {
     if (!userId) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      supabase.from('progress').upsert(toRow(userId, newState));
+      supabase.from('progress').upsert(toRow(userId, newState)).then(({ error }) => {
+        if (error) console.error('Progress sync error:', error);
+      });
     }, 1500);
   }, [userId]);
 
@@ -94,7 +105,7 @@ export function useAppState(userId) {
     persist(prev => {
       const today = new Date().toDateString();
       const newStreak = prev.lastDay !== today ? prev.streak + 1 : prev.streak;
-      return { ...prev, xp: prev.xp + 20, completedLessons: { ...prev.completedLessons, [id]: true }, streak: newStreak, lastDay: today };
+      return { ...prev, xp: prev.xp + XP_LESSON, completedLessons: { ...prev.completedLessons, [id]: true }, streak: newStreak, lastDay: today };
     });
   }, [persist]);
 
@@ -102,7 +113,7 @@ export function useAppState(userId) {
     persist(prev => ({
       ...prev,
       cardsLearned: prev.cardsLearned + 1,
-      xp: prev.xp + 5,
+      xp: prev.xp + XP_CARD,
       skills: { ...prev.skills, vocab: Math.min(100, prev.skills.vocab + 1) },
     }));
   }, [persist]);
@@ -111,19 +122,19 @@ export function useAppState(userId) {
     if (!correct) return;
     persist(prev => ({
       ...prev,
-      xp: prev.xp + 8,
+      xp: prev.xp + XP_QUIZ,
       skills: { ...prev.skills, grammar: Math.min(100, prev.skills.grammar + 1) },
     }));
   }, [persist]);
 
   const setSpeechRate = useCallback((rate) => {
-    const nextRate = Math.min(1.2, Math.max(0.6, rate));
+    const nextRate = Math.min(SPEECH_RATE_MAX, Math.max(SPEECH_RATE_MIN, rate));
     persist(prev => ({ ...prev, speechRate: nextRate }));
   }, [persist]);
 
-  const level = Math.floor(state.xp / 200) + 1;
-  const levelXP = state.xp % 200;
-  const levelPct = (levelXP / 200) * 100;
+  const level = Math.floor(state.xp / LEVEL_XP_THRESHOLD) + 1;
+  const levelXP = state.xp % LEVEL_XP_THRESHOLD;
+  const levelPct = (levelXP / LEVEL_XP_THRESHOLD) * 100;
 
   return { state, addXP, completeLesson, learnCard, answerQuiz, setSpeechRate, level, levelXP, levelPct };
 }

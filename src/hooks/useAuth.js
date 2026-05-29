@@ -26,7 +26,8 @@ export function useAuth() {
   }, []);
 
   async function loadProfile(userId) {
-    const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+    if (error && error.code !== 'PGRST116') console.error('Profile load error:', error);
     if (data) { setProfile(data); setNeedsUsername(false); }
     else setNeedsUsername(true);
     setLoading(false);

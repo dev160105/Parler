@@ -2,11 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, BookMarked, Users, MapPin, Coffee, Clock, History, Rocket, Briefcase, Plane, Film } from 'lucide-react';
 import { COURSE, STORIES } from '../data/course';
+import { LEVEL_LABELS } from '../lib/constants';
 
 const container = { animate: { transition: { staggerChildren: 0.07 } } };
 const item = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } };
-
-const LEVEL_LABELS = ['', 'Débutant', 'Apprenti', 'Intermédiaire', 'Avancé', 'Expert', 'Maître'];
 
 const UNIT_ICONS = {
   1: BookOpen,

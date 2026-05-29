@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Volume2, BookMarked, ChevronRight } from 'lucide-react';
 import { STORIES } from '../data/course';
 import { speak } from '../utils/speech';
+import { XP_STORY } from '../lib/constants';
 
 export default function StoriesView({ storyId, navigate, addXP, speechRate }) {
   const [activeId, setActiveId] = useState(storyId || null);
@@ -53,8 +54,8 @@ export default function StoriesView({ storyId, navigate, addXP, speechRate }) {
         </div>
 
         <div className="lesson-actions">
-          <motion.button className="btn-primary" onClick={() => addXP(12, 'Story read')} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-            Mark story read · +12 XP
+          <motion.button className="btn-primary" onClick={() => addXP(XP_STORY, 'Story read')} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            Mark story read · +{XP_STORY} XP
           </motion.button>
           <button className="btn-ghost" onClick={() => speak(story.paragraphs.join(' '), speechRate)}>
             <Volume2 size={14} /> Play full story
