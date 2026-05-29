@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppState } from './hooks/useAppState';
+import { useAuth } from './hooks/useAuth';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import UnitView from './components/UnitView';
@@ -12,6 +13,7 @@ import FlashcardsView from './components/FlashcardsView';
 import QuizView from './components/QuizView';
 import ProgressView from './components/ProgressView';
 import Toast from './components/Toast';
+import AuthModal from './components/AuthModal';
 
 const pageVariants = {
   initial: { opacity: 0, y: 16 },
@@ -20,7 +22,8 @@ const pageVariants = {
 };
 
 export default function App() {
-  const appState = useAppState();
+  const { user, profile, loading: authLoading, needsUsername, signUp, signIn, signInWithGoogle, setUsername, signOut } = useAuth();
+  const appState = useAppState(user?.id);
   const [view, setView] = useState('home');
   const [currentUnit, setCurrentUnit] = useState(null);
   const [currentLesson, setCurrentLesson] = useState(null);
@@ -44,6 +47,33 @@ export default function App() {
     if (data.story !== undefined) setCurrentStory(data.story);
   }, []);
 
+  if (authLoading) {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        height: '100vh', background: 'var(--bg)',
+        backgroundImage: 'radial-gradient(rgba(124,92,191,0.08) 1px, transparent 1px)',
+        backgroundSize: '28px 28px',
+      }}>
+        <div style={{ fontFamily: 'var(--font-display)', color: 'var(--text-muted)', fontSize: '1rem', letterSpacing: '0.1em' }}>
+          Loading…
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || needsUsername) {
+    return (
+      <AuthModal
+        onSignIn={signIn}
+        onSignUp={signUp}
+        onGoogle={signInWithGoogle}
+        onSetUsername={setUsername}
+        needsUsername={needsUsername}
+      />
+    );
+  }
+
   const renderView = () => {
     switch (view) {
       case 'home': return <Dashboard navigate={navigate} state={appState.state} level={appState.level} />;
@@ -61,10 +91,28 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar view={view} navigate={navigate} state={appState.state} level={appState.level} levelXP={appState.levelXP} levelPct={appState.levelPct} speechRate={appState.state.speechRate} setSpeechRate={appState.setSpeechRate} />
+      <Sidebar
+        view={view}
+        navigate={navigate}
+        state={appState.state}
+        level={appState.level}
+        levelXP={appState.levelXP}
+        levelPct={appState.levelPct}
+        speechRate={appState.state.speechRate}
+        setSpeechRate={appState.setSpeechRate}
+        profile={profile}
+        onSignOut={signOut}
+      />
       <main className="main-content">
         <AnimatePresence mode="wait">
-          <motion.div key={view + (currentLesson || '') + (currentUnit?.id || '')} variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ minHeight: '100%' }}>
+          <motion.div
+            key={view + (currentLesson || '') + (currentUnit?.id || '')}
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={{ minHeight: '100%' }}
+          >
             {renderView()}
           </motion.div>
         </AnimatePresence>

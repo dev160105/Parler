@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { LayoutDashboard, BookOpen, Brain, Trophy, BookMarked, Volume2, TrendingUp, Flame } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Brain, Trophy, BookMarked, Volume2, TrendingUp, Flame, LogOut } from 'lucide-react';
 
 const NAV = [
   { id: 'home', label: 'Dashboard', icon: LayoutDashboard },
@@ -11,7 +11,7 @@ const NAV = [
   { id: 'progress', label: 'Progress', icon: TrendingUp },
 ];
 
-export default function Sidebar({ view, navigate, state, level, levelXP, levelPct, speechRate, setSpeechRate }) {
+export default function Sidebar({ view, navigate, state, level, levelXP, levelPct, speechRate, setSpeechRate, profile, onSignOut }) {
   const isSlow = speechRate < 1;
 
   return (
@@ -23,6 +23,15 @@ export default function Sidebar({ view, navigate, state, level, levelXP, levelPc
           <div className="brand-tagline">A1–A2 French Studio</div>
         </div>
       </div>
+
+      {profile && (
+        <div className="sidebar-user">
+          <div className="sidebar-username">@{profile.username}</div>
+          <button className="sidebar-signout" onClick={onSignOut} title="Sign out">
+            <LogOut size={14} />
+          </button>
+        </div>
+      )}
 
       <div className="xp-block">
         <div className="xp-header">
