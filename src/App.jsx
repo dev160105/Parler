@@ -7,6 +7,7 @@ import UnitView from './components/UnitView';
 import LessonView from './components/LessonView';
 import StoriesView from './components/StoriesView';
 import PronunciationView from './components/PronunciationView';
+import PronunciationRater from './components/PronunciationRaterView';
 import FlashcardsView from './components/FlashcardsView';
 import QuizView from './components/QuizView';
 import ProgressView from './components/ProgressView';
@@ -50,6 +51,7 @@ export default function App() {
       case 'lesson': return <LessonView lessonId={currentLesson} navigate={navigate} state={appState.state} completeLesson={appState.completeLesson} addXP={handleAddXP} showToast={showToast} speechRate={appState.state.speechRate} />;
       case 'stories': return <StoriesView storyId={currentStory} navigate={navigate} addXP={handleAddXP} speechRate={appState.state.speechRate} />;
       case 'pronunciation': return <PronunciationView speechRate={appState.state.speechRate} />;
+      case 'pronunciation-rater': return <PronunciationRater />;
       case 'flashcards': return <FlashcardsView state={appState.state} learnCard={appState.learnCard} addXP={handleAddXP} speechRate={appState.state.speechRate} />;
       case 'quiz': return <QuizView answerQuiz={appState.answerQuiz} addXP={handleAddXP} navigate={navigate} />;
       case 'progress': return <ProgressView state={appState.state} level={appState.level} levelXP={appState.levelXP} levelPct={appState.levelPct} />;

@@ -4,6 +4,7 @@ import { LayoutDashboard, BookOpen, Brain, Trophy, BookMarked, Volume2, Trending
 const NAV = [
   { id: 'home', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'pronunciation', label: 'Pronunciation', icon: Volume2 },
+  { id: 'pronunciation-rater', label: 'Pronunciation Rater', icon: Volume2 },
   { id: 'flashcards', label: 'Flashcards', icon: Brain },
   { id: 'quiz', label: 'Quiz', icon: Trophy },
   { id: 'stories', label: 'Stories', icon: BookMarked },
